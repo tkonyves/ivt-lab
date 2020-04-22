@@ -45,5 +45,4 @@ public class GT4500Test {
     assertEquals(true, result);
     verify(mockTS, times(2)).fire(1);
   }
-
 }
