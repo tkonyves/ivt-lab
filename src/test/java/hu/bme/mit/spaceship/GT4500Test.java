@@ -13,18 +13,19 @@ import java.util.List;
 public class GT4500Test {
 
   private TorpedoStore mockTS1;
+  private TorpedoStore mockTS2;
   private GT4500 ship;
 
   @BeforeEach
   public void init(){
     mockTS1 = mock(TorpedoStore.class);
-
-    this.ship = new GT4500(mockTS1, mockTS1);
   }
 
   @Test
   public void fireTorpedo_Single_Success(){
     // Arrange
+    this.ship = new GT4500(mockTS1, mockTS1);
+
     // Set the behavior of the mock
     when(mockTS1.fire(1)).thenReturn(true);
 
@@ -39,6 +40,8 @@ public class GT4500Test {
   @Test
   public void fireTorpedo_All_Success(){
     // Arrange
+    this.ship = new GT4500(mockTS1, mockTS1);
+
     // Set the behavior of the mock
     when(mockTS1.fire(1)).thenReturn(true);
 
@@ -68,6 +71,7 @@ public class GT4500Test {
   @Test
   public void fireTorpedo_Single_10_times() {
       // Arrange
+      this.ship = new GT4500(mockTS1, mockTS1);
       when(mockTS1.fire(1)).thenReturn(true);
 
       // Act, Assert
@@ -77,6 +81,7 @@ public class GT4500Test {
   @Test
   public void fireTorpedo_Single_100_times() {
       // Arrange
+      this.ship = new GT4500(mockTS1, mockTS1);
       when(mockTS1.fire(1)).thenReturn(true);
 
       // Act, Assert
@@ -86,6 +91,7 @@ public class GT4500Test {
   @Test
   public void fireTorpedo_All_10_times() {
       // Arrange
+      this.ship = new GT4500(mockTS1, mockTS1);
       when(mockTS1.fire(1)).thenReturn(true);
 
       // Act, Assert
@@ -95,6 +101,7 @@ public class GT4500Test {
   @Test
   public void fireTorpedo_All_100_times() {
       // Arrange
+      this.ship = new GT4500(mockTS1, mockTS1);
       when(mockTS1.fire(1)).thenReturn(true);
 
       // Act, Assert
@@ -104,6 +111,7 @@ public class GT4500Test {
   @Test
   public void fireTorpedo_AllAndSingle_alternate_100_times() {
     // Arrange
+    this.ship = new GT4500(mockTS1, mockTS1);
     when(mockTS1.fire(1)).thenReturn(true);
 
     // Act
