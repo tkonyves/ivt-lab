@@ -19,6 +19,7 @@ public class GT4500Test {
   @BeforeEach
   public void init(){
     mockTS1 = mock(TorpedoStore.class);
+    mockTS2 = mock(TorpedoStore.class);
   }
 
   @Test
@@ -128,5 +129,159 @@ public class GT4500Test {
       assertEquals(true, results.get(i));
     }
     verify(mockTS1, times(firingRounds * firesPerRound)).fire(1);
+  }
+
+  void setTS1EmptyTS2Full() {
+    this.ship = new GT4500(mockTS1, mockTS2);
+    when(mockTS1.fire(1)).thenReturn(false);
+    when(mockTS1.isEmpty()).thenReturn(true);
+    when(mockTS2.fire(1)).thenReturn(true);
+    when(mockTS2.isEmpty()).thenReturn(false);
+  }
+
+  void setTS1FullTS2Emtpy() {
+    this.ship = new GT4500(mockTS1, mockTS2);
+    when(mockTS1.fire(1)).thenReturn(true);
+    when(mockTS1.isEmpty()).thenReturn(false);
+    when(mockTS2.fire(1)).thenReturn(false);
+    when(mockTS2.isEmpty()).thenReturn(true);
+  }
+
+  void setTS1EmptyTS2Empty() {
+    this.ship = new GT4500(mockTS1, mockTS2);
+    when(mockTS1.fire(1)).thenReturn(false);
+    when(mockTS1.isEmpty()).thenReturn(true);
+    when(mockTS2.fire(1)).thenReturn(false);
+    when(mockTS2.isEmpty()).thenReturn(true);
+  }
+
+  void setTS1FailureNotEmptyTS2SuccessNotEmpty() {
+    this.ship = new GT4500(mockTS1, mockTS2);
+    when(mockTS1.fire(1)).thenReturn(false);
+    when(mockTS1.isEmpty()).thenReturn(false);
+    when(mockTS2.fire(1)).thenReturn(true);
+    when(mockTS2.isEmpty()).thenReturn(false);
+  }
+
+  void setTS1SuccessNotEmptyTS2FailureNotEmpty() {
+    this.ship = new GT4500(mockTS1, mockTS2);
+    when(mockTS1.fire(1)).thenReturn(true);
+    when(mockTS1.isEmpty()).thenReturn(false);
+    when(mockTS2.fire(1)).thenReturn(false);
+    when(mockTS2.isEmpty()).thenReturn(false);
+  }
+
+  void setTS1FailureNotEmptyTS2FailureNotEmpty() {
+    this.ship = new GT4500(mockTS1, mockTS2);
+    when(mockTS1.fire(1)).thenReturn(false);
+    when(mockTS1.isEmpty()).thenReturn(false);
+    when(mockTS2.fire(1)).thenReturn(false);
+    when(mockTS2.isEmpty()).thenReturn(false);
+  }
+
+  @Test
+  public void TS1_empty_SINGLE() {
+    setTS1EmptyTS2Full();
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(true, result);
+  }
+
+  @Test
+  public void TS2_empty_SINGLE() {
+    setTS1FullTS2Emtpy();
+    boolean result;
+    result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(true, result);
+    result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(true, result);
+
+    // TS1 runs out
+    when(mockTS1.fire(1)).thenReturn(false);
+    when(mockTS1.isEmpty()).thenReturn(true);
+    result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void Both_empty_SINGLE() {
+    setTS1EmptyTS2Empty();
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void TS1_failure_NotEmpty_SINGLE() {
+    setTS1FailureNotEmptyTS2SuccessNotEmpty();
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void TS2_failure_NotEmpty_SINGLE() {
+    setTS1SuccessNotEmptyTS2FailureNotEmpty();
+    boolean result;
+    result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(true, result);
+    result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void Both_failure_NotEmpty_SINGLE() {
+    setTS1FailureNotEmptyTS2FailureNotEmpty();
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(false, result);
+  }
+
+  
+
+  @Test
+  public void TS1_empty_ALL() {
+    this.ship = new GT4500(mockTS1, mockTS2);
+    setTS1EmptyTS2Full();
+    boolean result = ship.fireTorpedo(FiringMode.ALL);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void TS2_empty_ALL() {
+    setTS1FullTS2Emtpy();
+    boolean result = ship.fireTorpedo(FiringMode.ALL);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void Both_empty_ALL() {
+    setTS1EmptyTS2Empty();
+    boolean result = ship.fireTorpedo(FiringMode.ALL);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void TS1_failure_NotEmpty_ALL() {
+    setTS1FailureNotEmptyTS2SuccessNotEmpty();
+    boolean result = ship.fireTorpedo(FiringMode.ALL);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void TS2_failure_NotEmpty_ALL() {
+    setTS1SuccessNotEmptyTS2FailureNotEmpty();
+    boolean result = ship.fireTorpedo(FiringMode.ALL);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void Both_failure_NotEmpty_ALL() {
+    setTS1FailureNotEmptyTS2FailureNotEmpty();
+    boolean result = ship.fireTorpedo(FiringMode.ALL);
+    assertEquals(false, result);
+  }
+
+  @Test
+  public void testFireLaser_NOT_IMPLEMENTED() {
+    setTS1FailureNotEmptyTS2FailureNotEmpty();
+    boolean result = ship.fireLaser(FiringMode.ALL);
+    assertEquals(false, result);
   }
 }
